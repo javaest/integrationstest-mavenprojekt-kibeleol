@@ -36,6 +36,19 @@ public class OrderServiceTest {
 
     @Test
     public void testPlaceOrder_PaymentFailed() {
-    	assertTrue(false);
+        Order order = new Order(100.0);
+
+        // Mock das Verhalten des paymentService, um false zurückzugeben, wenn die Methode processPayment aufgerufen wird
+        when(paymentService.processPayment(order.getAmount())).thenReturn(false);
+
+        // Rufe die Methode placeOrder mit dem order-Objekt auf und speichere das Ergebnis
+        boolean result = orderService.placeOrder(order);
+
+        // Überprüfe, ob das Ergebnis von placeOrder false ist
+        assertFalse(result);
+
+        // Verifiziere, dass die Methode processPayment von paymentService genau einmal mit dem Betrag der Bestellung aufgerufen wurde
+        verify(paymentService, times(1)).processPayment(order.getAmount());
     }
+
 }
